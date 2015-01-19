@@ -10,6 +10,7 @@ PROTOCOL="$(adb shell 'netstat | grep '":$PORT"' | busybox awk '"'"'{print $1}'"
 [ $# -eq 2 ] && echo "PROTOCOL: ${PROTOCOL}"
 INODE="$(adb shell 'cat /proc/net/'"$PROTOCOL"' | grep '":$PORT16"' | busybox awk '"'"'{print $10}'"'" | sed $'s/\r//g')"
 [ $# -eq 2 ] && echo "INODE: $INODE"
+# FIXME: This somehow often results in >1 processes and will fail sometimes.
 PROCESS="$(adb shell 'for i in /proc/*/fd; do ls -l "$i" | grep '"$INODE"' &>/dev/null && echo "$i"; done' | sed $'s/\r//g')"
 PROCESS="${PROCESS#/proc/}"
 PROCESS="${PROCESS%/fd}"
