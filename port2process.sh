@@ -7,6 +7,7 @@ PORT16="$(echo "obase=16; $PORT" | bc)"
 PORT16="$(printf "%04s" "$PORT16")"
 [ $# -eq 2 ] && echo "hex(PORT): $PORT16"
 PROTOCOL="$(adb shell 'netstat | grep '":$PORT"' | busybox awk '"'"'{print $1}'"'" | sed $'s/\r//g')"
+[ -z "$PROTOCOL" ] && echo "No such open port" && exit 127
 [ $# -eq 2 ] && echo "PROTOCOL: ${PROTOCOL}"
 INODE="$(adb shell 'cat /proc/net/'"$PROTOCOL"' | grep '":$PORT16"' | busybox awk '"'"'{print $10}'"'" | sed $'s/\r//g')"
 [ $# -eq 2 ] && echo "INODE: $INODE"
