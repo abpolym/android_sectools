@@ -6,6 +6,7 @@ usage() { echo "Usage: ${FUNCNAME[1]} $1" && return 0; }
 PORT16="$(echo "obase=16; $PORT" | bc)"
 PORT16="$(printf "%04s" "$PORT16")"
 [ $# -eq 2 ] && echo "hex(PORT): $PORT16"
+[ "$(adb shell busybox | sed $'s/\r//g')" = "busybox: permission denied" ] && echo "Busybox is not installed || No rights to execute it" && exit 2
 PROTOCOL="$(adb shell 'netstat | grep "'":$PORT"' " 2>/dev/null | busybox awk '"'"'{print $1}'"'" | sed $'s/\r//g')"
 [ -z "$PROTOCOL" ] && echo "No such open port" && exit 127
 [ $# -eq 2 ] && echo "PROTOCOL: ${PROTOCOL}"
